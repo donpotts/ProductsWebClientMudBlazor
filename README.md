@@ -1,3 +1,6 @@
+#ProductsWebClientMudBlazor
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/donpotts/ProductsWebClientMudBlazor/ProductsWebClientMudBlazor.yml?logo=github)
+
 # Introduction 
 Blazor client that connects to the Products Web API project
 
