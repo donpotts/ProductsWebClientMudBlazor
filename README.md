@@ -1,6 +1,8 @@
 # Introduction 
 Blazor client that connects to the Products Web API project
 
+https://sampleproductswebapi.azurewebsites.net/swagger/index.html
+
 ## Overview
 
 This repository contains an ASP.NET Core application with a Blazor WebAssembly (WASM) UI in .NET 8 using MudBlazor. It also includes user authentication using JWT.
@@ -33,6 +35,8 @@ This repository contains an ASP.NET Core application with a Blazor WebAssembly (
 ## Authentication
 
 This application uses JWT user authentication. To log in, navigate to the login page and enter your credentials.
+
+https://productswebclientmudblazor.azurewebsites.net/
 
 Username:  test
 
