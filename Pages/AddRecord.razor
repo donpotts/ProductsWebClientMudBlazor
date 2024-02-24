@@ -1,0 +1,65 @@
+@page "/products/add"
+@inject AppService AppService
+@inject ISnackbar Snackbar
+@inject HttpClient HttpClient
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<PageTitle>Add Products Record</PageTitle>
+
+<EditForm Model="@record" OnValidSubmit="@OnSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">Add Products Record</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudTextField @bind-Value="record.Name" For="@(() => record.Name)" Label="Name" />
+            <MudTextField @bind-Value="record.Price" For="@(() => record.Price)" Label="Price" />
+            <MudTextField @bind-Value="record.Description" For="@(() => record.Description)" Label="Description" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="OnCancel">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Add</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance? MudDialog { get; set; }
+
+    private Products record = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        try
+        {
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private void OnCancel()
+    {
+        MudDialog?.Cancel();
+    }
+
+    private async Task OnSubmit()
+    {
+        try
+        {
+            await AppService.InsertProductsAsync(record);
+            MudDialog?.Close();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

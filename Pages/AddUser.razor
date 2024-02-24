@@ -1,0 +1,60 @@
+@page "/users/add"
+@inject AppService AppService
+@inject ISnackbar Snackbar
+@inject HttpClient HttpClient
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<PageTitle>Add User</PageTitle>
+
+<EditForm Model="@registerModel" OnValidSubmit="@OnSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+     <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">Add User</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudTextField @bind-Value="registerModel.UserName" For="@(() => registerModel.UserName)" Label="User Name" />
+            <MudTextField @bind-Value="registerModel.Password" For="@(() => registerModel.Password)" Label="Password" InputType="InputType.Password" />
+            <MudTextField @bind-Value="registerModel.ConfirmPassword" For="@(() => registerModel.ConfirmPassword)" Label="Confirm Password" InputType="InputType.Password" />
+            <MudTextField @bind-Value="registerModel.FirstName" For="@(() => registerModel.FirstName)" Label="First Name" />
+            <MudTextField @bind-Value="registerModel.LastName" For="@(() => registerModel.LastName)" Label="Last Name" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="OnCancel">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Add</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm> 
+
+@code {
+    [CascadingParameter]
+    MudDialogInstance? MudDialog { get; set; }
+
+    private UserModel registerModel = new();
+
+    private void OnCancel()
+    {
+        MudDialog?.Cancel();
+    }
+
+    private async void OnSubmit()
+    {
+        if (registerModel.Password != registerModel.ConfirmPassword)
+        {
+            Snackbar.Add("Password and Confirm Password do not match.", Severity.Error);
+            return;
+        }
+
+        try
+        {
+            await AppService.RegisterUserAsync(registerModel);
+            MudDialog?.Close();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}

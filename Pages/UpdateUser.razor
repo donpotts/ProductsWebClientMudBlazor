@@ -1,0 +1,91 @@
+@page "/users/{Id:long}"
+@inject AppService AppService
+@inject ISnackbar Snackbar
+@inject HttpClient HttpClient
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<PageTitle>Update User</PageTitle>
+
+@if (record == null)
+{
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">Update User</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudText>Loading...</MudText>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="OnCancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" Disabled="true">Update</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+else
+{
+    <EditForm Model="@record" OnSubmit="@OnSubmit">
+        <DataAnnotationsValidator />
+        <MudDialog>
+            <TitleContent>
+                <MudText Typo="Typo.h6">Update User</MudText>
+            </TitleContent>
+            <DialogContent>
+                <MudNumericField @bind-Value="record.Id" For="@(() => record.Id)" Label="User Id" ReadOnly="true" HideSpinButtons="true" />
+                <MudTextField @bind-Value="record.UserName" For="@(() => record.UserName)" Label="User Name" ReadOnly="true" />
+                <MudTextField @bind-Value="record.FirstName" For="@(() => record.FirstName)" Label="First Name" />
+                <MudTextField @bind-Value="record.LastName" For="@(() => record.LastName)" Label="Last Name" />
+                <MudTextField @bind-Value="record.IsActive" For="@(() => record.IsActive)" Label="Is Active" />
+            </DialogContent>
+            <DialogActions>
+                <MudButton OnClick="OnCancel">Cancel</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Update</MudButton>
+            </DialogActions>
+        </MudDialog>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+
+    [CascadingParameter]
+    MudDialogInstance? MudDialog { get; set; }
+
+    private UserModel? record;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            record = await AppService.GetUserByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private void OnCancel()
+    {
+        MudDialog?.Cancel();
+    }
+
+    private async void OnSubmit()
+    {
+        if (record == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await AppService.UpdateUserAsync(Id, record);
+            MudDialog?.Close();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+}
