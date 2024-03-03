@@ -7,6 +7,10 @@ Blazor client that connects to the Products Web API project
 
 https://sampleproductswebapi.azurewebsites.net/swagger/index.html
 
+It's repository is in Azure DevOps.
+
+![DevOpsProductsWebAPI](https://github.com/donpotts/ProductsWebClientMudBlazor/assets/16153517/fa874dab-2dc8-45b6-bc27-1007ce3c9a1f)
+
 ## Overview
 
 This repository contains an ASP.NET Core application with a Blazor WebAssembly (WASM) UI in .NET 8 using MudBlazor. It also includes user authentication using JWT.
